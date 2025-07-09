@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>XO Game</title>
+  <style>
+    body {
+      background: white;
+      font-family: system-ui;
+      direction: rtl;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .game {
+      width: 260px;
+      margin: auto;
+      color: black;
+    }
+
+    .title {
+      background: #f25;
+      padding: 5px 0;
+      margin: 5px;
+      color: white;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .title span {
+      color: #fa0;
+    }
+
+    .score-board {
+      display: flex;
+      justify-content: space-around;
+      margin: 10px 0;
+      font-weight: bold;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .score {
+      min-width: 60px;
+    }
+
+    .square {
+      width: 80px;
+      height: 80px;
+      background: #f25;
+      float: left;
+      margin: 2px;
+      font-size: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      font-weight: bold;
+    }
+
+    .square:hover {
+      background: black;
+    }
+
+    #resetBtn {
+      background: #f25;
+      color: white;
+      border: none;
+      margin-top: 15px;
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="game">
+    <div class="title"><span>X O</span> GAME</div>
+
+    <div class="score-board">
+      <div class="score x-score">
+        <span id="x-wins-label">X Wins:</span> <span id="x-wins">0</span>
+      </div>
+      <div class="score draw-score">
+        <span id="draws-label">Draws:</span> <span id="draws">0</span>
+      </div>
+      <div class="score o-score">
+        <span id="o-wins-label">O Wins:</span> <span id="o-wins">0</span>
+      </div>
+    </div>
+
+    <div class="square" id="item1" onclick="game(this.id)"></div>
+    <div class="square" id="item2" onclick="game(this.id)"></div>
+    <div class="square" id="item3" onclick="game(this.id)"></div>
+    <div class="square" id="item4" onclick="game(this.id)"></div>
+    <div class="square" id="item5" onclick="game(this.id)"></div>
+    <div class="square" id="item6" onclick="game(this.id)"></div>
+    <div class="square" id="item7" onclick="game(this.id)"></div>
+    <div class="square" id="item8" onclick="game(this.id)"></div>
+    <div class="square" id="item9" onclick="game(this.id)"></div>
+
+    <button id="resetBtn" onclick="resetGame()">Restart Game</button>
+    <div style="clear: both;"></div>
+  </div>
+
+  <script>
+    let title = document.querySelector('.title');
+    let turn = 'x';
+    let squares = [];
+    let gameOver = false;
+
+    let xWins = 0;
+    let oWins = 0;
+    let draws = 0;
+
+    const xWinsElement = document.getElementById("x-wins");
+    const oWinsElement = document.getElementById("o-wins");
+    const drawsElement = document.getElementById("draws");
+
+    function updateScoreBoard() {
+      xWinsElement.textContent = xWins;
+      oWinsElement.textContent = oWins;
+      drawsElement.textContent = draws;
+    }
+
+    function winner() {
+      for (let i = 1; i <= 9; i++) {
+        squares[i] = document.getElementById('item' + i).textContent;
+      }
+
+      function end(num1, num2, num3) {
+        gameOver = true;
+        document.getElementById('item' + num1).style.background = '#000';
+        document.getElementById('item' + num2).style.background = '#000';
+        document.getElementById('item' + num3).style.background = '#000';
+
+        if (squares[num1].toUpperCase() === 'X') {
+          xWins++;
+        } else if (squares[num1].toUpperCase() === 'O') {
+          oWins++;
+        }
+
+        updateScoreBoard();
+        title.textContent = squares[num1].toUpperCase() +
+          ' winner! Score - X: ' + xWins + ', O: ' + oWins + ', Draws: ' + draws;
+      }
+
+      if (
+        squares[1] === squares[2] && squares[2] === squares[3] && squares[1] !== '' ||
+        squares[4] === squares[5] && squares[5] === squares[6] && squares[4] !== '' ||
+        squares[7] === squares[8] && squares[8] === squares[9] && squares[7] !== '' ||
+        squares[1] === squares[4] && squares[4] === squares[7] && squares[1] !== '' ||
+        squares[2] === squares[5] && squares[5] === squares[8] && squares[2] !== '' ||
+        squares[3] === squares[6] && squares[6] === squares[9] && squares[3] !== '' ||
+        squares[1] === squares[5] && squares[5] === squares[9] && squares[1] !== '' ||
+        squares[3] === squares[5] && squares[5] === squares[7] && squares[3] !== ''
+      ) {
+        let winCombos = [
+          [1,2,3],[4,5,6],[7,8,9],
+          [1,4,7],[2,5,8],[3,6,9],
+          [1,5,9],[3,5,7]
+        ];
+        for (let combo of winCombos) {
+          if (squares[combo[0]] !== '' &&
+              squares[combo[0]] === squares[combo[1]] &&
+              squares[combo[1]] === squares[combo[2]]) {
+            end(combo[0], combo[1], combo[2]);
+            return;
+          }
+        }
+      } else if (!squares.includes('')) {
+        draws++;
+        updateScoreBoard();
+        title.textContent = "It's a Draw! Total draws: " + draws;
+      }
+    }
+
+    function resetGame() {
+      gameOver = false;
+      for (let i = 1; i <= 9; i++) {
+        const cell = document.getElementById('item' + i);
+        cell.textContent = '';
+        cell.style.background = '#f25';
+      }
+      title.innerHTML = '<span>X O</span> GAME';
+      turn = 'x';
+    }
+
+    function game(id) {
+      if (gameOver) return;
+
+      let element = document.getElementById(id);
+      if (element.textContent === '') {
+        element.textContent = turn.toUpperCase();
+        turn = turn === 'x' ? 'o' : 'x';
+        title.innerHTML = ' ' + turn.toUpperCase();
+        winner();
+      }
+    }
+
+    updateScoreBoard();
+  </script>
+</body>
+</html>

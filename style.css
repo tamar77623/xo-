@@ -1,0 +1,63 @@
+body {
+  background: white;
+  font-family: system-ui;
+  direction: rtl;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+}
+
+.game {
+  width: 260px;
+  margin: auto;
+  color: black;
+}
+
+.title {
+  background: #f25;
+  padding: 5px 0;
+  margin: 5px;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.title span {
+  color: #fa0;
+}
+
+.score-board {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px 0;
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+}
+
+.score {
+  min-width: 60px;
+}
+
+.square {
+  width: 80px;
+  height: 80px;
+  background: #f25;
+  float: left;
+  margin: 2px;
+  font-size: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  color: white;
+  font-weight: bold;
+}
+
+.square:hover {
+  background: black;
+}
+resetBtn{
+  background: #f25;
+}
